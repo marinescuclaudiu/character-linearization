@@ -34,7 +34,7 @@ class RowFinder:
         self.grayscale_image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
         self.save_image(self.grayscale_image, 'grayscale-image.jpg')
 
-    def adaptive_threshold(self, image, block_size=11, constant=10):
+    def adaptive_threshold(self, image, block_size=31, constant=20):
 
         threshold_image = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, block_size,
                                                 constant)
@@ -63,9 +63,13 @@ class RowFinder:
 
         return filtered_image
 
-    def find_peaks(self, image, height=300, distance=50):
+    def find_peaks(self, image, distance=20):
 
         histogram = np.sum(image[:, :], axis=1)
+
+        # Set height to be half of the maximum of the histogram.
+        height = np.max(histogram) / 2
+
         peaks, _ = find_peaks(histogram, height=height, distance=distance)
 
         return peaks
